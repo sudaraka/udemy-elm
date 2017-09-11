@@ -24,8 +24,13 @@ statuses =
 renderList : List String -> Html msg
 renderList list =
     list
-        |> List.map (\l -> li [] [ text l ])
+        |> List.map createLi
         |> ul []
+
+
+createLi : String -> Html msg
+createLi str =
+    li [] [ text str ]
 
 
 main : Html msg
