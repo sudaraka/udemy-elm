@@ -21,8 +21,15 @@ statuses =
     ]
 
 
+renderList : List String -> Html msg
+renderList list =
+    ul []
+        (List.map (\l -> li [] [ text l ]) list)
+
+
 main : Html msg
 main =
-    statuses
-        |> toString
-        |> text
+    div []
+        [ h1 [] [ text "List of statuses:" ]
+        , renderList statuses
+        ]
