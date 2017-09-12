@@ -31,7 +31,8 @@ model =
 
 
 type Msg
-    = Text
+    = AddBang
+    | RemoveBang
     | SizeUp
     | SizeDown
 
@@ -43,14 +44,25 @@ type Msg
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        Text ->
+        AddBang ->
             { model | text = model.text ++ "!" }
+
+        RemoveBang ->
+            { model | text = bangChecker model.text }
 
         SizeUp ->
             { model | size = model.size + 1 }
 
         SizeDown ->
             { model | size = sizeChecker model.size }
+
+
+bangChecker : String -> String
+bangChecker str =
+    if String.endsWith "!" str then
+        String.dropRight 1 str
+    else
+        str
 
 
 sizeChecker : Int -> Int
@@ -69,7 +81,8 @@ view : Model -> Html Msg
 view model =
     div []
         [ div [ appStyle model.size ] [ text model.text ]
-        , button [ onClick Text ] [ text "Add exclamation mark" ]
+        , button [ onClick AddBang ] [ text "Add !" ]
+        , button [ onClick RemoveBang ] [ text "Remove !" ]
         , button [ onClick SizeDown ] [ text "-" ]
         , button [ onClick SizeUp ] [ text "+" ]
         ]
