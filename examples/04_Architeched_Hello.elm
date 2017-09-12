@@ -32,6 +32,7 @@ model =
 
 type Msg
     = Text
+    | Size
 
 
 
@@ -42,7 +43,10 @@ update : Msg -> Model -> Model
 update msg model =
     case msg of
         Text ->
-            { model | text = model.text ++ "!", size = model.size + 1 }
+            { model | text = model.text ++ "!" }
+
+        Size ->
+            { model | size = model.size + 1 }
 
 
 
@@ -54,6 +58,7 @@ view model =
     div []
         [ div [ appStyle model.size ] [ text model.text ]
         , button [ onClick Text ] [ text "Add exclamation mark" ]
+        , button [ onClick Size ] [ text "+" ]
         ]
 
 
