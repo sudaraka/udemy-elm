@@ -50,7 +50,15 @@ update msg model =
             { model | size = model.size + 1 }
 
         SizeDown ->
-            { model | size = model.size - 1 }
+            { model | size = sizeChecker model.size }
+
+
+sizeChecker : Int -> Int
+sizeChecker size =
+    if 1 >= size then
+        size
+    else
+        size - 1
 
 
 
