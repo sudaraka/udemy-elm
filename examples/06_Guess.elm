@@ -9,17 +9,29 @@ main =
     Html.beginnerProgram { model = model, view = view, update = update }
 
 
+type alias RevealedWord =
+    { text : String
+    , pos : Int
+    }
+
+
+type alias Result =
+    { text : String
+    , isCorrect : Bool
+    }
+
+
 type alias Model =
     { word : String
     , guess : String
-    , revealedWord : { text : String, pos : Int }
-    , result : String
+    , revealedWord : RevealedWord
+    , result : Result
     }
 
 
 model : Model
 model =
-    Model "Saturday" "" { text = "S", pos = 2 } ""
+    Model "Saturday" "" (RevealedWord "S" 2) (Result "" False)
 
 
 type Msg
@@ -41,17 +53,17 @@ update msg model =
             { model | result = checkResult model }
 
 
-checkResult : Model -> String
-checkResult { word, guess, revealedWord } =
+checkResult : Model -> Result
+checkResult { word, guess, revealedWord, result } =
     if revealedWord.text == word then
-        "You didn't get it"
+        { result | text = "You didn't get it", isCorrect = False }
     else if String.toLower guess == String.toLower word then
-        "You got it!"
+        { result | text = "You got it!", isCorrect = True }
     else
-        "Nope"
+        { result | text = "Nope", isCorrect = False }
 
 
-revealedAndIncrement : Model -> { pos : Int, text : String }
+revealedAndIncrement : Model -> RevealedWord
 revealedAndIncrement { revealedWord, word, guess } =
     if String.toLower guess == String.toLower word then
         revealedWord
@@ -88,15 +100,15 @@ mainStyle =
 
 generateResult : Model -> Html Msg
 generateResult { result } =
-    if String.isEmpty result then
+    if String.isEmpty result.text then
         div [] []
     else
         let
             color =
-                if "Nope" == result then
-                    "tomato"
-                else
+                if result.isCorrect then
                     "forestgreen"
+                else
+                    "tomato"
         in
             div
                 [ style
@@ -105,4 +117,4 @@ generateResult { result } =
                     , ( "fontFamily", "impact" )
                     ]
                 ]
-                [ text result ]
+                [ text result.text ]
