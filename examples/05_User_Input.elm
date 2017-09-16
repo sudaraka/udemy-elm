@@ -50,13 +50,24 @@ view : Model -> Html Msg
 view model =
     div []
         [ input [ placeholder "Type text here", onInput Text ] []
-        , div [ styleText ] [ text model.text ]
+        , if 8 < String.length model.text then
+            div [ smallText ] [ text model.text ]
+          else
+            div [ bigText ] [ text model.text ]
         ]
 
 
-styleText : Attribute msg
-styleText =
+smallText : Attribute msg
+smallText =
     style
-        [ ( "fontSize", "10em" )
+        [ ( "fontSize", "3em" )
+        , ( "color", "red" )
+        ]
+
+
+bigText : Attribute msg
+bigText =
+    style
+        [ ( "fontSize", "5em" )
         , ( "color", "sandybrown" )
         ]
