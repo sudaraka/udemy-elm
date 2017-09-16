@@ -67,7 +67,7 @@ revealedAndIncrement { revealedWord, word, guess } =
 view : Model -> Html Msg
 view model =
     div []
-        [ h2 [] [ text ("I'm thinking of a word that starts with " ++ toString model.revealedWord.text) ]
+        [ h2 [] [ text ("I'm thinking of a " ++ toString (String.length model.word) ++ " letter word that starts with " ++ toString model.revealedWord.text) ]
         , input [ placeholder "Type your guess", onInput Answer ] []
         , button [ onClick Reveal ] [ text "Give me a hint" ]
         , button [ onClick Check ] [ text "Submit Answer" ]
