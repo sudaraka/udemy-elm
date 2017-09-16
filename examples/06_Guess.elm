@@ -77,7 +77,7 @@ view model =
 
 generateResult : Model -> Html Msg
 generateResult { result } =
-    if 1 > String.length result then
+    if String.isEmpty result then
         div [] []
     else if "Nope" == result then
         div [ style [ ( "color", "tomato" ) ] ] [ text result ]
