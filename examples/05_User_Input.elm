@@ -50,29 +50,20 @@ view : Model -> Html Msg
 view model =
     div []
         [ input [ placeholder "Type text here", onInput Text ] []
-        , div [ checkTextSize model.text ] [ text model.text ]
+        , div [ adjustSize model ] [ text model.text ]
         ]
 
 
-checkTextSize : String -> Attribute msg
-checkTextSize str =
-    if 8 < String.length str then
-        smallText
-    else
-        bigText
-
-
-smallText : Attribute msg
-smallText =
-    style
-        [ ( "fontSize", "3em" )
-        , ( "color", "red" )
-        ]
-
-
-bigText : Attribute msg
-bigText =
-    style
-        [ ( "fontSize", "5em" )
-        , ( "color", "sandybrown" )
-        ]
+adjustSize : Model -> Attribute msg
+adjustSize { text } =
+    let
+        ( size, color ) =
+            if 8 < String.length text then
+                ( "2em", "red" )
+            else
+                ( "5em", "sandybrown" )
+    in
+        style
+            [ ( "fontSize", size )
+            , ( "color", color )
+            ]
