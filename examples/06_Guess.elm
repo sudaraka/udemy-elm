@@ -45,7 +45,7 @@ checkResult : Model -> String
 checkResult { word, guess, revealedWord } =
     if revealedWord.text == word then
         "You didn't get it"
-    else if guess == word then
+    else if String.toLower guess == String.toLower word then
         "You got it!"
     else
         "Nope"
@@ -53,7 +53,7 @@ checkResult { word, guess, revealedWord } =
 
 revealedAndIncrement : Model -> { pos : Int, text : String }
 revealedAndIncrement { revealedWord, word, guess } =
-    if guess == word then
+    if String.toLower guess == String.toLower word then
         revealedWord
     else if String.length word == String.length revealedWord.text then
         revealedWord
