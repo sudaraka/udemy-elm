@@ -12,34 +12,48 @@ main =
 type alias Model =
     { word : String
     , guess : String
-    , isCorrect : Bool
     , revealedWord : { text : String, pos : Int }
+    , result : String
     }
 
 
 model : Model
 model =
-    Model "Saturday" "" False { text = "S", pos = 2 }
+    Model "Saturday" "" { text = "S", pos = 2 } ""
 
 
 type Msg
     = Answer String
     | Reveal
+    | Check
 
 
 update : Msg -> Model -> Model
 update msg model =
     case msg of
         Answer txt ->
-            { model | guess = txt, isCorrect = checkIfCorrect model txt }
+            { model | guess = txt }
 
         Reveal ->
             { model | revealedWord = revealedAndIncrement model }
 
+        Check ->
+            { model | result = checkResult model }
+
+
+checkResult : Model -> String
+checkResult { word, guess, revealedWord } =
+    if revealedWord.text == word then
+        "You didn't get it"
+    else if guess == word then
+        "You got it!"
+    else
+        "Nope"
+
 
 revealedAndIncrement : Model -> { pos : Int, text : String }
-revealedAndIncrement { revealedWord, word, isCorrect } =
-    if isCorrect then
+revealedAndIncrement { revealedWord, word, guess } =
+    if guess == word then
         revealedWord
     else if String.length word == String.length revealedWord.text then
         revealedWord
@@ -50,33 +64,22 @@ revealedAndIncrement { revealedWord, word, isCorrect } =
         }
 
 
-checkIfCorrect : Model -> String -> Bool
-checkIfCorrect model txt =
-    if txt == model.word then
-        True
-    else
-        False
-
-
 view : Model -> Html Msg
 view model =
     div []
         [ h2 [] [ text ("I'm thinking of a word that starts with " ++ toString model.revealedWord.text) ]
         , input [ placeholder "Type your guess", onInput Answer ] []
         , button [ onClick Reveal ] [ text "Give me a hint" ]
-        , div [] [ generateResult model ]
+        , button [ onClick Check ] [ text "Submit Answer" ]
+        , generateResult model
         ]
 
 
 generateResult : Model -> Html Msg
-generateResult { isCorrect, word, revealedWord } =
-    let
-        txt =
-            if revealedWord.text == word then
-                "You didn't get it"
-            else if isCorrect then
-                "You got it!"
-            else
-                "Nope"
-    in
-        text txt
+generateResult { result } =
+    if 1 > String.length result then
+        div [] []
+    else if "Nope" == result then
+        div [ style [ ( "color", "tomato" ) ] ] [ text result ]
+    else
+        div [ style [ ( "color", "forestgreen" ) ] ] [ text result ]
