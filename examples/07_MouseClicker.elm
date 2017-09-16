@@ -2,6 +2,8 @@ module MouseClicker exposing (..)
 
 import Html exposing (Html, div, text, program)
 import Mouse
+import Keyboard
+import Char
 
 
 main =
@@ -16,6 +18,7 @@ main =
 type alias Model =
     { x : Int
     , y : Int
+    , keyPressed : Keyboard.KeyCode
     }
 
 
@@ -25,7 +28,7 @@ type alias Model =
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model 0 0, Cmd.none )
+    ( Model 0 0 0, Cmd.none )
 
 
 
@@ -34,6 +37,7 @@ init =
 
 type Msg
     = MouseMessage Mouse.Position
+    | KeyboardMessage Keyboard.KeyCode
 
 
 
@@ -46,6 +50,9 @@ update msg model =
         MouseMessage pos ->
             ( { model | x = pos.x, y = pos.y }, Cmd.none )
 
+        KeyboardMessage code ->
+            ( { model | keyPressed = code }, Cmd.none )
+
 
 
 -- SUBSCRIPTION
@@ -53,7 +60,10 @@ update msg model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Mouse.clicks MouseMessage
+    Sub.batch
+        [ Mouse.clicks MouseMessage
+        , Keyboard.presses KeyboardMessage
+        ]
 
 
 
@@ -69,4 +79,10 @@ view model =
                 ++ ", and Y is: "
                 ++ (toString model.y)
             )
+        , div []
+            [ text
+                ("You pressed: "
+                    ++ (toString (Char.fromCode model.keyPressed))
+                )
+            ]
         ]
