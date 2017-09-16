@@ -70,9 +70,13 @@ view model =
 
 generateResult : Model -> Html Msg
 generateResult { isCorrect, word, revealedWord } =
-    if revealedWord.text == word then
-        text "You didn't get it"
-    else if isCorrect then
-        text "You got it!"
-    else
-        text "Nope"
+    let
+        txt =
+            if revealedWord.text == word then
+                "You didn't get it"
+            else if isCorrect then
+                "You got it!"
+            else
+                "Nope"
+    in
+        text txt
