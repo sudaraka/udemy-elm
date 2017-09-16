@@ -79,7 +79,19 @@ generateResult : Model -> Html Msg
 generateResult { result } =
     if String.isEmpty result then
         div [] []
-    else if "Nope" == result then
-        div [ style [ ( "color", "tomato" ) ] ] [ text result ]
     else
-        div [ style [ ( "color", "forestgreen" ) ] ] [ text result ]
+        let
+            color =
+                if "Nope" == result then
+                    "tomato"
+                else
+                    "forestgreen"
+        in
+            div
+                [ style
+                    [ ( "color", color )
+                    , ( "fontSize", "5em" )
+                    , ( "fontFamily", "impact" )
+                    ]
+                ]
+                [ text result ]
