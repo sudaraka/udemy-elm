@@ -50,11 +50,16 @@ view : Model -> Html Msg
 view model =
     div []
         [ input [ placeholder "Type text here", onInput Text ] []
-        , if 8 < String.length model.text then
-            div [ smallText ] [ text model.text ]
-          else
-            div [ bigText ] [ text model.text ]
+        , div [ checkTextSize model.text ] [ text model.text ]
         ]
+
+
+checkTextSize : String -> Attribute msg
+checkTextSize str =
+    if 8 < String.length str then
+        smallText
+    else
+        bigText
 
 
 smallText : Attribute msg
