@@ -13,14 +13,13 @@ type alias Model =
     { word : String
     , guess : String
     , isCorrect : Bool
-    , revealedWord : String
-    , revealedPos : Int
+    , revealedWord : { text : String, pos : Int }
     }
 
 
 model : Model
 model =
-    Model "Saturday" "" False "S" 2
+    Model "Saturday" "" False { text = "S", pos = 2 }
 
 
 type Msg
@@ -35,17 +34,20 @@ update msg model =
             { model | guess = txt, isCorrect = checkIfCorrect model txt }
 
         Reveal ->
-            { model | revealedWord = revealLetter model, revealedPos = model.revealedPos + 1 }
+            { model | revealedWord = revealedAndIncrement model }
 
 
-revealLetter : Model -> String
-revealLetter model =
-    if model.isCorrect then
-        model.revealedWord
-    else if String.length model.word == String.length model.revealedWord then
-        model.word
+revealedAndIncrement : Model -> { pos : Int, text : String }
+revealedAndIncrement { revealedWord, word, isCorrect } =
+    if isCorrect then
+        revealedWord
+    else if String.length word == String.length revealedWord.text then
+        revealedWord
     else
-        String.slice 0 model.revealedPos model.word
+        { revealedWord
+            | text = String.slice 0 revealedWord.pos word
+            , pos = revealedWord.pos + 1
+        }
 
 
 checkIfCorrect : Model -> String -> Bool
@@ -59,7 +61,7 @@ checkIfCorrect model txt =
 view : Model -> Html Msg
 view model =
     div []
-        [ h2 [] [ text ("I'm thinking of a word that starts with " ++ toString model.revealedWord) ]
+        [ h2 [] [ text ("I'm thinking of a word that starts with " ++ toString model.revealedWord.text) ]
         , input [ placeholder "Type your guess", onInput Answer ] []
         , button [ onClick Reveal ] [ text "Give me a hint" ]
         , div [] [ generateResult model ]
@@ -68,7 +70,7 @@ view model =
 
 generateResult : Model -> Html Msg
 generateResult { isCorrect, word, revealedWord } =
-    if revealedWord == word then
+    if revealedWord.text == word then
         text "You didn't get it"
     else if isCorrect then
         text "You got it!"
