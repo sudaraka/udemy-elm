@@ -1,0 +1,19 @@
+{
+  "name": "udemy-elm",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "exit 0;"
+  },
+  "author": "Sudaraka Wijesinghe <sudaraka@sudaraka.org> (https://sudaraka.org/)",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "express": "^4.15.4",
+    "express-ws": "^3.0.0"
+  }
+}
